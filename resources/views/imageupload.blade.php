@@ -31,23 +31,26 @@
                 timeout: 50000,
                 removedfile: function(file)
                 {
-                    var name = file.upload.filename;
-                    $.ajax({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-                        },
-                        type: 'POST',
-                        url: '{{ url("image/delete") }}',
-                        data: {filename: name},
-                        success: function (data){
-                            console.log("File has been successfully removed!!");
-                        },
-                        error: function(e) {
-                            console.log(e);
-                        }});
-                    var fileRef;
-                    return (fileRef = file.previewElement) != null ?
-                        fileRef.parentNode.removeChild(file.previewElement) : void 0;
+                    return Dropzone.confirm("Are You Sure to "+this.options.dictRemoveFile, function() {
+                        var name = file.upload.filename;
+                        $.ajax({
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                            },
+                            type: 'POST',
+                            url: '{{ url("image/delete") }}',
+                            data: {filename: name},
+                            success: function (data) {
+                                console.log("File has been successfully removed!!");
+                            },
+                            error: function (e) {
+                                console.log(e);
+                            }
+                        });
+                        var fileRef;
+                        return (fileRef = file.previewElement) != null ?
+                            fileRef.parentNode.removeChild(file.previewElement) : void 0;
+                    });
                 },
 
                 success: function(file, response)
